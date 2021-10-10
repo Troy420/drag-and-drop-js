@@ -9,21 +9,42 @@ draggableElements.forEach(elem => {
     // elem.addEventListener("dragend", dragEnd);
 })
 droppableElements.forEach(elem => {
-    // elem.addEventListener("dragenter", dragenter);
+    elem.addEventListener("dragenter", dragEnter);
     elem.addEventListener("dragover", dragOver);
-    // elem.addEventListener("dragleave", dragLeave);
+    elem.addEventListener("dragleave", dragLeave);
     elem.addEventListener("drop", drop);
 })
 
 // FUNCTIONS
 function dragStart(event) {
-    event.dataTransfer.setData("color", event.target.style.color);
+    event.dataTransfer.setData("color", event.target.id);
+}
+function dragEnter(event) {
+    if(!event.target.classList.contains("dropped")) {
+        event.target.classList.add("droppable-hover");
+    }
+}
+function dragLeave(event) {
+    event.target.classList.remove("droppable-hover");
 }
 function dragOver(event) {
-    event.preventDefault();
+    if(!event.target.classList.contains("dropped")) {
+        event.preventDefault();
+    }  
 }
 function drop(event) {
     event.preventDefault();
     const draggableElementData = event.dataTransfer.getData("color");
-    event.target.style.backgroundColor = draggableElementData;
+    const droppableElementData = event.target.getAttribute("data-draggable-id"); 
+    console.log(draggableElementData);
+    if(draggableElementData === droppableElementData) {
+        event.target.classList.add("dropped");
+        event.target.classList.remove("droppable-hover");
+        const draggableElement = document.getElementById(draggableElementData);
+        event.target.style.backgroundColor = draggableElement.style.color;
+        // event.target.style.backgroundColor = window.getComputedStyle(draggableElement).color;
+        draggableElement.classList.add("dragged");
+        draggableElement.setAttribute("draggable", false);
+        event.target.insertAdjacentHTML("afterbegin", `<i class="fas fa-${draggableElementData}"></i>`);
+    }
 }
