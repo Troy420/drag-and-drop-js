@@ -17,7 +17,7 @@ droppableElements.forEach(elem => {
 
 // FUNCTIONS
 function dragStart(event) {
-    event.dataTransfer.setData("color", event.target.id);
+    event.dataTransfer.setData("id", event.target.id);
 }
 function dragEnter(event) {
     if(!event.target.classList.contains("dropped")) {
@@ -34,9 +34,8 @@ function dragOver(event) {
 }
 function drop(event) {
     event.preventDefault();
-    const draggableElementData = event.dataTransfer.getData("color");
+    const draggableElementData = event.dataTransfer.getData("id");
     const droppableElementData = event.target.getAttribute("data-draggable-id"); 
-    console.log(draggableElementData);
     if(draggableElementData === droppableElementData) {
         event.target.classList.add("dropped");
         event.target.classList.remove("droppable-hover");
